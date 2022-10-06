@@ -8,11 +8,9 @@ class PlayListRepository(private val service: PlayListService) {
 
    suspend fun getPlaylists():Flow<Result<List<PlayList>>> {
 
-       service.fetchPlayLists()
+       return service.fetchPlayLists()
 
-       return flow {
 
-       }
 
     }
 

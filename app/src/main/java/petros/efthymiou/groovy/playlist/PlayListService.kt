@@ -1,8 +1,12 @@
 package petros.efthymiou.groovy.playlist
 
-class PlayListService {
-    fun fetchPlayLists() {
+import kotlinx.coroutines.flow.Flow
 
+
+class PlayListService {
+   suspend fun fetchPlayLists() :Flow<Result<List<PlayList>>> {
+
+       TODO()
     }
 
 }

@@ -1,11 +1,18 @@
 package petros.efthymiou.groovy.playlist
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class PlayListRepository {
-    suspend fun getPlaylists():Flow<Result<List<PlayList>>> {
+class PlayListRepository(private val service: PlayListService) {
 
-         TODO("dO SOMETHING")
+
+   suspend fun getPlaylists():Flow<Result<List<PlayList>>> {
+
+       service.fetchPlayLists()
+
+       return flow {
+
+       }
 
     }
 

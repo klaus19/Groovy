@@ -6,12 +6,10 @@ import kotlinx.coroutines.flow.flow
 class PlayListRepository(private val service: PlayListService) {
 
 
-   suspend fun getPlaylists():Flow<Result<List<PlayList>>> {
-
-       return service.fetchPlayLists()
+   suspend fun getPlaylists():Flow<Result<List<PlayList>>> = service.fetchPlayLists()
 
 
 
     }
 
-}
+

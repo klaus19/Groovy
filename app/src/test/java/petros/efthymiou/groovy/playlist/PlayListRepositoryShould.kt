@@ -27,6 +27,12 @@ class PlayListRepositoryShould:BaseUnitTest() {
 
     @Test
     fun emitPlayListsFromService() = runBlockingTest {
+        val repository = mockSucessfulCase()
+
+        assertEquals(playlists,repository.getPlaylists().first().getOrNull())
+    }
+
+    private suspend fun mockSucessfulCase(): PlayListRepository {
         whenever(service.fetchPlayLists()).thenReturn(
             flow {
                 emit(Result.success(playlists))
@@ -34,7 +40,6 @@ class PlayListRepositoryShould:BaseUnitTest() {
         )
 
         val repository = PlayListRepository(service)
-
-        assertEquals(playlists,repository.getPlaylists().first().getOrNull())
+        return repository
     }
 }

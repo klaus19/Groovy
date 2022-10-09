@@ -22,7 +22,7 @@ class PlayListServiceShould:BaseUnitTest() {
     @Test
     fun fetchPlayListsFromAPI() = runBlockingTest {
         service = PlayListService(api)
-        service.fetchPlayLists()
+        service.fetchPlayLists().first()
 
         verify(api,times(1)).fetchAllPlayLists()
     }
@@ -30,12 +30,30 @@ class PlayListServiceShould:BaseUnitTest() {
     @Test
     fun convertValuesToFlowResultAndEmitThem()= runBlockingTest {
 
-        whenever(api.fetchAllPlayLists()).thenReturn(playlists)
-
-        service = PlayListService(api)
+        mockSuccessfulCase()
 
         assertEquals(Result.success(playlists),service.fetchPlayLists().first())
 
+    }
+
+
+    @Test
+    fun emitsErrorResultWhenNetworkFails() = runBlockingTest {
+        mockErrorCase()
+
+        assertEquals("Something went wrong",service.fetchPlayLists().first().exceptionOrNull()?.message)
+
+    }
+
+    private suspend fun mockErrorCase() {
+        whenever(api.fetchAllPlayLists()).thenThrow(RuntimeException("Damn backen developers"))
+        service = PlayListService(api)
+    }
+
+    private suspend fun mockSuccessfulCase() {
+        whenever(api.fetchAllPlayLists()).thenReturn(playlists)
+
+        service = PlayListService(api)
     }
 
 }

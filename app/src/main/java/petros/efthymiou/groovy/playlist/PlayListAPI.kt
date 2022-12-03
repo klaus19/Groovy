@@ -1,10 +1,12 @@
 package petros.efthymiou.groovy.playlist
 
+import retrofit2.http.GET
+
 interface PlayListAPI {
-    suspend fun fetchAllPlayLists():List<PlayList>{
 
-      TODO()
+    @GET("/playlists")
+    suspend fun fetchAllPlayLists():List<PlayList>
 
-    }
+
 
 }

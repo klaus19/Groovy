@@ -9,19 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
 import petros.efthymiou.groovy.R
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
+import javax.inject.Inject
 
 /**
  * A fragment representing a list of Items.
  */
+@AndroidEntryPoint
 class PlayListFragment : Fragment() {
 
     lateinit var viewModel: PlayListViewModel
+    @Inject
     lateinit var viewmodelFactory: PlayListViewModelFactory
-
-    private val service = PlayListService(object:PlayListAPI{})
-
-    private val repository= PlayListRepository(service)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +57,6 @@ class PlayListFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        viewmodelFactory = PlayListViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewmodelFactory).get(PlayListViewModel::class.java)
     }
 

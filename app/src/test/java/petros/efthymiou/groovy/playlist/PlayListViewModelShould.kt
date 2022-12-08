@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 import org.junit.Assert.*
 import petros.efthymiou.groovy.utils.BaseUnitTest
+import petros.efthymiou.groovy.utils.captureValues
 import petros.efthymiou.groovy.utils.getValueForTest
 
 
@@ -45,15 +46,41 @@ class PlayListViewModelShould:BaseUnitTest() {
 
     @Test
     fun emitErrorWhenReceivedError() {
-        runBlocking {
-            whenever(repository.getPlaylists()).thenReturn(
-                flow {
-                    emit(Result.failure<List<PlayList>>(exception))
-                }
-            )
-        }
-        val viewModel = PlayListViewModel(repository)
+        val viewModel = mockErrorCase()
         assertEquals(exception,viewModel.playList.getValueForTest()?.exceptionOrNull())
+    }
+
+    @Test
+    fun showSpinnerWhileLoading() = runBlockingTest {
+        val viewModel = mockSuccessfulCase()
+
+        viewModel.loader.captureValues{
+            viewModel.playList.getValueForTest()
+
+            assertEquals(true,values[0])
+        }
+    }
+
+    @Test
+    fun closeLoaderAfterPlayListLoad() = runBlockingTest {
+        val viewModel = mockSuccessfulCase()
+
+        viewModel.loader.captureValues {
+            viewModel.playList.getValueForTest()
+
+            assertEquals(false,values.last())
+    }
+        }
+
+    @Test
+    fun closeLoaderAfterError() = runBlockingTest {
+        val viewModel = mockErrorCase()
+
+        viewModel.loader.captureValues {
+            viewModel.playList.getValueForTest()
+
+            assertEquals(false,values.last())
+        }
     }
 
 
@@ -66,7 +93,17 @@ class PlayListViewModelShould:BaseUnitTest() {
             )
 
         }
-        val viewModel = PlayListViewModel(repository)
-        return viewModel
+        return PlayListViewModel(repository)
+    }
+
+    private fun mockErrorCase(): PlayListViewModel {
+        runBlocking {
+            whenever(repository.getPlaylists()).thenReturn(
+                flow {
+                    emit(Result.failure<List<PlayList>>(exception))
+                }
+            )
+        }
+        return PlayListViewModel(repository)
     }
 }

@@ -10,7 +10,7 @@ class PlayListService @Inject constructor(
     private val api: PlayListAPI
 )
  {
-   suspend fun fetchPlayLists() :Flow<Result<List<PlayList>>> {
+   suspend fun fetchPlayLists() :Flow<Result<List<PlayListRaw>>> {
 
        return flow {
            emit(Result.success(api.fetchAllPlayLists()))

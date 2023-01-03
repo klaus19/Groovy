@@ -14,6 +14,7 @@ import petros.efthymiou.groovy.utils.BaseUnitTest
 class PlayListRepositoryShould:BaseUnitTest() {
 
     private val service:PlayListService = mock()
+    private val mapper: PlaylistMapper = mock()
     private val playlists = mock<List<PlayList>>()
     private val playlistRaw = mock<List<PlayListRaw>>()
     private val exception = RuntimeException("Something went wrong")
@@ -42,6 +43,15 @@ class PlayListRepositoryShould:BaseUnitTest() {
 
     }
 
+    @Test
+    fun delegateBusinessLogicToMapper()= runBlockingTest {
+        val repository = mockSucessfulCase()
+
+        repository.getPlaylists().first()
+        verify(mapper, times(1)).invoke(playlistRaw)
+    }
+
+
     private suspend fun mockFailureCase(): PlayListRepository {
         whenever(service.fetchPlayLists()).thenReturn(
             flow {
@@ -49,7 +59,7 @@ class PlayListRepositoryShould:BaseUnitTest() {
             }
         )
 
-        val repository = PlayListRepository(service)
+        val repository = PlayListRepository(service,mapper)
         return repository
     }
 
@@ -60,7 +70,7 @@ class PlayListRepositoryShould:BaseUnitTest() {
             }
         )
 
-        val repository = PlayListRepository(service)
+        val repository = PlayListRepository(service,mapper)
         return repository
     }
 }

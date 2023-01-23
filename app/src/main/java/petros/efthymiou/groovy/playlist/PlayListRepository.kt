@@ -2,6 +2,7 @@ package petros.efthymiou.groovy.playlist
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PlayListRepository @Inject constructor(
@@ -10,7 +11,13 @@ class PlayListRepository @Inject constructor(
     ) {
 
 
-   suspend fun getPlaylists(): Flow<Result<List<PlayListRaw>>> = service.fetchPlayLists()
+   suspend fun getPlaylists(): Flow<Result<List<PlayList>>> =
+       service.fetchPlayLists().map {
+           if (it.isSuccess)
+           Result.success(mapper(it.getOrNull()!!))
+           else (it.isFailure)
+               Result.failure(it.exceptionOrNull()!!)
+       }
 
 
 

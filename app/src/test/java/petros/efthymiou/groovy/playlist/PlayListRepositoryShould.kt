@@ -22,7 +22,7 @@ class PlayListRepositoryShould:BaseUnitTest() {
     @Test
     fun getPlayListFromService() = runBlockingTest {
 
-        val repository=PlayListRepository(service)
+        val repository=mockSucessfulCase()
         repository.getPlaylists()
 
         verify(service, times(1)).fetchPlayLists()
@@ -59,8 +59,8 @@ class PlayListRepositoryShould:BaseUnitTest() {
             }
         )
 
-        val repository = PlayListRepository(service,mapper)
-        return repository
+        return PlayListRepository(service,mapper)
+
     }
 
     private suspend fun mockSucessfulCase(): PlayListRepository {
@@ -70,7 +70,7 @@ class PlayListRepositoryShould:BaseUnitTest() {
             }
         )
 
-        val repository = PlayListRepository(service,mapper)
-        return repository
+        whenever(mapper.invoke(playlistRaw)).thenReturn(playlists)
+        return PlayListRepository(service,mapper)
     }
 }

@@ -1,5 +1,7 @@
 package petros.efthymiou.groovy.playlist
 
-class PlayListRaw {
-
-}
+data class PlayListRaw(
+    val id: String,
+    val type:String,
+    val category:String
+)

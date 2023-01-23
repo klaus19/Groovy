@@ -40,9 +40,6 @@ class PlayListFeature :BaseUITest() {
 
     @Test
     fun displayPlayLists(){
-        Thread.sleep(4000)
-
-
         assertRecyclerViewItemCount(R.id.playlist_list,10)
 
         onView(allOf(withId(R.id.playlist_name), isDescendantOfA(nthChildOf(withId( R.id.playlist_list),
@@ -69,26 +66,28 @@ class PlayListFeature :BaseUITest() {
 
     @Test
     fun hidesLoader(){
-        Thread.sleep(4000)
 
         assertNotDisplayed(R.id.loader)
     }
 
     @Test
     fun displaysRockForRockList(){
-        Thread.sleep(4000)
-        onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId( R.id.playlist_list),
-            0))))
+        onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId( R.id.playlist_list),0))))
             .check(matches(withDrawable(R.mipmap.rock)))
             .check(matches(isDisplayed()))
 
-        onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId( R.id.playlist_list),
-            3))))
+        onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId( R.id.playlist_list), 3))))
             .check(matches(withDrawable(R.mipmap.rock)))
             .check(matches(isDisplayed()))
     }
 
 
+    @Test
+    fun navigateToDetailsScreen(){
+        onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId( R.id.playlist_list),0))))
+            .perform()
+        assertDisplayed(R.id.playlists_details_root)
+    }
 
 
 

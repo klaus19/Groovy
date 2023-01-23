@@ -9,14 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
-import okhttp3.OkHttpClient
 import petros.efthymiou.groovy.R
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Inject
 
 /**
@@ -63,7 +60,12 @@ class PlayListFragment : Fragment() {
         with(view as RecyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            adapter = MyPlayListRecyclerViewAdapter(playlists)
+            adapter = MyPlayListRecyclerViewAdapter(playlists) { id ->
+               // val action =
+                //    PlaylistFragmentDirections.actionPlaylistFragmentToPlaylistDetailFragment(id)
+
+               // findNavController().navigate(action)
+            }
         }
     }
 

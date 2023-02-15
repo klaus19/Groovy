@@ -5,55 +5,66 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_play_list_detail.*
+import kotlinx.android.synthetic.main.fragment_playlist.view.*
+import kotlinx.android.synthetic.main.playlist_item.*
+import kotlinx.android.synthetic.main.playlist_item.playlist_name
+import petros.efthymiou.groovy.playlist.PlayListViewModel
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PlayListDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class PlayListDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    @Inject
+    lateinit var viewModel:PlayListDetailViewmodel
+    @Inject
+    lateinit var viewModelFactory:PlayDetailsViewmodelFactory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
+    val args:PlayListDetailFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_play_list_detail, container, false)
+        val view = inflater.inflate(R.layout.fragment_play_list_detail, container, false)
+        val id = args.playlistId
+
+
+        setupViewmodel()
+
+        viewModel.getPlaylistDetails(id)
+        observeLiveData()
+        return view
+    }
+
+    private fun observeLiveData() {
+        viewModel.playListDetails.observe(this as LifecycleOwner) { playlistDetails ->
+            if (playlistDetails.getOrNull() != null) {
+                setupUI(playlistDetails)
+            } else {
+
+            }
+        }
+    }
+
+    private fun setupViewmodel() {
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(PlayListDetailViewmodel::class.java)
+    }
+
+    private fun setupUI(playlistDetails: Result<PlayListDetail>) {
+        playlist_name.text = playlistDetails.getOrNull()!!.name
+        playlists_details.text = playlistDetails.getOrNull()!!.details
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PlayListDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PlayListDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance()=
+            PlayListDetailFragment()
     }
 }

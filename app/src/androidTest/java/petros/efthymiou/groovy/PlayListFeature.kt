@@ -28,10 +28,6 @@ import petros.efthymiou.groovy.playlist.idlingResource
 @RunWith(AndroidJUnit4::class)
 class PlayListFeature :BaseUITest() {
 
-    val mActivityTestRule = ActivityTestRule(MainActivity::class.java)
-    @Rule get
-
-
 
     @Test
     fun displayScreenTitle() {
